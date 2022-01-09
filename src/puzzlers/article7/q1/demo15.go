@@ -12,6 +12,11 @@ func main() {
 	fmt.Printf("The length of s2: %d\n", len(s2))
 	fmt.Printf("The capacity of s2: %d\n", cap(s2))
 	fmt.Printf("The value of s2: %d\n", s2)
+	fmt.Printf("The TYPE of s2: %T\n", s2)
+	fmt.Printf("The TYPE of s1: %T\n", s1)
+	var s32 [3]int             // array of 3 integers
+	fmt.Printf("The TYPE of s3: %T\n", s32)
+
 	fmt.Println()
 
 	// 示例2。
