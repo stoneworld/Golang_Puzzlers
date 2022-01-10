@@ -9,7 +9,7 @@ var channels = [3]chan int{
 }
 
 var numbers = []int{1, 2, 3}
-
+var m int
 func main() {
 	select {
 	case getChan(0) <- getNumber(0):
