@@ -10,10 +10,11 @@ func main() {
 	sign := make(chan struct{}, num)
 
 	for i := 0; i < num; i++ {
-		go func() {
+		go func(i int) {
+
 			fmt.Println(i)
 			sign <- struct{}{}
-		}()
+		}(i)
 	}
 
 	// 办法1。
