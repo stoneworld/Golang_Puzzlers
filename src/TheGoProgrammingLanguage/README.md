@@ -123,3 +123,47 @@ fmt.Println(p == q) // "false"
 不要将作用域和生命周期混为一谈。声明语句的作用域对应的是一个源代码的文本区域；它是一个编译时的属性。
 一个变量的生命周期是指程序运行时变量存在的有效时间段，在此时间区域内它可以被程序的其他部分引用；是一个运行时的概念。
 
+#### 数组
+
+数组是一个由固定长度的特定类型元素组成的序列，和数组对应的类型是Slice（切片），它是可以增长和收缩的动态序列。
+数组的长度是数组类型的一个组成部分，因此[3]int和[4]int是两种不同的数组类型。数组的长度必须是常量表达式，因为数组的长度需要在编译阶段确定。
+
+#### Map
+
+但是map中的元素并不是一个变量，因此我们不能对map的元素进行取址操作：
+
+> _ = &ages["bob"] // compile error: cannot take address of map element
+
+Map的迭代顺序是不确定的，并且不同的哈希函数实现可能导致不同的遍历顺序。
+在实践中，遍历的顺序是随机的，每一次遍历的顺序都不相同。这是故意的，每次都使用随机的遍历顺序可以强制要求程序不会依赖具体的哈希函数实现。
+如果要按顺序遍历key/value对，我们必须显式地对key进行排序，可以使用sort包的Strings函数对字符串slice进行排序。下面是常见的处理方式：
+
+```go
+
+import "sort"
+
+var names []string
+for name := range ages {
+    names = append(names, name)
+}
+sort.Strings(names)
+for _, name := range names {
+    fmt.Printf("%s\t%d\n", name, ages[name])
+}
+
+```
+
+在向map存数据前必须先创建map。
+
+通过key作为索引下标来访问map将产生一个value。如果key在map中是存在的，那么将得到与key对应的value；如果key不存在，那么将得到value对应类型的零值，正如我们前面看到的ages["bob"]那样。这个规则很实用，但是有时候可能需要知道对应的元素是否真的是在map之中。
+例如，如果元素类型是一个数字，你可能需要区分一个已经存在的0，和不存在而返回零值的0，可以像下面这样测试：
+
+```go
+
+age, ok := ages["bob"]
+if !ok { /* "bob" is not a key in this map; age == 0. */ }
+
+if age, ok := ages["bob"]; !ok { /* ... */ }
+
+```
+
